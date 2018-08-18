@@ -5,6 +5,8 @@ This is a application for fetch gold / exchange / stock / fund value from other 
 1. flask
 2. flask_restful
 3. pysqlit3
+4. pep8
+5. flake8
 
 ## app stracture
 1. assets->keep gold / exchange / stock / fund init value .csv

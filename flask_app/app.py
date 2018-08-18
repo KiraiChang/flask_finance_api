@@ -1,3 +1,5 @@
+# pylint:disable=E1101
+# for ignore app.logger no method of addHandler
 import os
 import logging
 from flask import Flask
@@ -15,7 +17,6 @@ api.add_resource(Golds, '/golds/<string:date>')
 api.add_resource(Funds, '/funds/<string:date>')
 api.add_resource(Stocks, '/stocks/<string:date>')
 api.add_resource(Exchanges, '/exchanges/<string:date>')
-
 
 if __name__ == '__main__':
     app.debug = True
