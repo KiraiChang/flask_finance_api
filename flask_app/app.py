@@ -11,6 +11,8 @@ from resource.exchanges import Exchanges
 from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
 api.add_resource(Golds, '/golds/<string:date>')
@@ -19,6 +21,8 @@ api.add_resource(Stocks, '/stocks/<string:date>')
 api.add_resource(Exchanges, '/exchanges/<string:date>')
 
 if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
     app.debug = True
     app.secret_key = 'SuperSecretKey'
 

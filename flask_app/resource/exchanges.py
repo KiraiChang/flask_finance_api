@@ -3,22 +3,13 @@ import sqlite3
 import datetime
 from lxml import etree
 from flask_restful import Resource
+from models.exchange import ExchangeModel
 
 
 class Exchanges(Resource):
-    insert_exchanges_query = ('INSERT INTO exchanges '
-                              'VALUES(?, ?, ?, ?, ?, ?, ?)')
-    select_exchanges_max_date_query = ('SELECT date FROM exchanges '
-                                       'ORDER BY date DESC LIMIT 1')
-    select_exchanges_date_query = ('SELECT * FROM exchanges '
-                                   'WHERE date >=? ORDER BY date DESC')
-
     def patch(self, date):
-        conn = sqlite3.connect('finance.db')
-        cursor = conn.cursor()
-        cursor.execute(self.select_exchanges_max_date_query)
         endDate = datetime.datetime.now()
-        maxDate = datetime.datetime.strptime(cursor.fetchone()[0], '%Y%m%d')
+        maxDate = datetime.datetime.strptime(ExchangeModel.get_max_date(), '%Y%m%d')
         exchangeParam = {
             "datestart": maxDate.strftime('%Y/%m/%d'),
             "syear": maxDate.strftime('%Y'),
@@ -46,7 +37,7 @@ class Exchanges(Resource):
             if item[0].text is not None:
                 itemDate = datetime.datetime.strptime(item[0].text, '%Y/%m/%d')
                 if (maxDate < itemDate):
-                    exchangeList.append((None, itemDate.strftime('%Y%m%d'),
+                    exchangeList.append(ExchangeModel(itemDate.strftime('%Y%m%d'),
                                          float(item[1].text),
                                          float(item[3].text),
                                          float(item[5].text),
@@ -54,24 +45,14 @@ class Exchanges(Resource):
                                          float(item[10].text)))
 
         if (len(exchangeList) > 0):
-            cursor.executemany(self.insert_exchanges_query, exchangeList)
-        conn.commit()
-        conn.close()
+            ExchangeModel.save_list_to_db(exchangeList)
         return {
             'message': 'patch fund success',
-            'funds': list(exchangeList)
+            'exchange': list(item.json() for item in exchangeList)
         }, 200
 
     def get(self, date):
-        conn = sqlite3.connect('finance.db')
-        cursor = conn.cursor()
-        exchangeList = []
-        for row in cursor.execute(self.select_exchanges_date_query, (date, )):
-            exchangeList.append((row[0], row[1], row[2], row[3], row[4],
-                                 row[5], row[6]))
-        conn.commit()
-        conn.close()
         return {
             'message': 'get fund success',
-            'funds': list(exchangeList)
+            'exchange': list(item.json() for item in ExchangeModel.get_by_date(date))
         }, 200
