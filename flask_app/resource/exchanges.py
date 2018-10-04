@@ -21,7 +21,7 @@ class Exchanges(Resource):
             "eday": endDate.strftime('%d'),
         }
 
-        response = requests.post('http://www.taifex.com.tw/chinese/3/3_5.asp',
+        response = requests.post('http://www.taifex.com.tw/cht/3/dailyFXRate',
                                  exchangeParam)
         html = etree.HTML(response.content)
         exchangeList = []
