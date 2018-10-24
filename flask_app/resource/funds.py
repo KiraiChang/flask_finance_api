@@ -6,9 +6,10 @@ from flask_restful import Resource
 from models.fund import FundModel
 
 
-class Funds(Resource):
+class FundsResource(Resource):
     def patch(self, date):
-        maxDate = datetime.datetime.strptime(FundModel.get_max_date(), '%Y%m%d')
+        maxDate = datetime.datetime.strptime(
+            FundModel.get_max_date(), '%Y%m%d')
         response = requests.get(
             "http://fund.bot.com.tw/w/wb/wb02a.djhtm?a=ALB04-0961")
         html = etree.HTML(response.content)
@@ -27,7 +28,7 @@ class Funds(Resource):
                 date = datetime.datetime.strptime(item[0].text, '%Y/%m/%d')
                 if (maxDate < date):
                     fundList.append(FundModel(date.strftime('%Y%m%d'),
-                                     item[1].text))
+                                              item[1].text))
         if (len(fundList) > 0):
             FundModel.save_list_to_db(fundList)
         return {'message': 'patch fund success', 'funds': list(item.json() for item in fundList)}, 200

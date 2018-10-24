@@ -1,7 +1,9 @@
-from db import db
+from common.db import db
 from sqlalchemy import desc
 
+
 class ExchangeModel(db.Model):
+    __bind_key__ = 'finance'
     __tablename__ = 'exchanges'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -12,14 +14,14 @@ class ExchangeModel(db.Model):
     aud_usd = db.Column(db.Float)
     nzd_usd = db.Column(db.Float)
 
-    def __init__(self, 
-        date, 
-        usd_twd, 
-        eur_usd,
-        gbp_usd,
-        aud_usd,
-        nzd_usd,
-        ):
+    def __init__(self,
+                 date,
+                 usd_twd,
+                 eur_usd,
+                 gbp_usd,
+                 aud_usd,
+                 nzd_usd,
+                 ):
         self.date = date
         self.usd_twd = usd_twd
         self.eur_usd = eur_usd
@@ -40,7 +42,7 @@ class ExchangeModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
-    
+
     @classmethod
     def save_list_to_db(cls, list):
         for item in list:

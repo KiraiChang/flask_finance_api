@@ -6,10 +6,11 @@ from flask_restful import Resource
 from models.exchange import ExchangeModel
 
 
-class Exchanges(Resource):
+class ExchangesResource(Resource):
     def patch(self, date):
         endDate = datetime.datetime.now()
-        maxDate = datetime.datetime.strptime(ExchangeModel.get_max_date(), '%Y%m%d')
+        maxDate = datetime.datetime.strptime(
+            ExchangeModel.get_max_date(), '%Y%m%d')
         exchangeParam = {
             "datestart": maxDate.strftime('%Y/%m/%d'),
             "syear": maxDate.strftime('%Y'),
@@ -38,11 +39,11 @@ class Exchanges(Resource):
                 itemDate = datetime.datetime.strptime(item[0].text, '%Y/%m/%d')
                 if (maxDate < itemDate):
                     exchangeList.append(ExchangeModel(itemDate.strftime('%Y%m%d'),
-                                         float(item[1].text),
-                                         float(item[3].text),
-                                         float(item[5].text),
-                                         float(item[6].text),
-                                         float(item[10].text)))
+                                                      float(item[1].text),
+                                                      float(item[3].text),
+                                                      float(item[5].text),
+                                                      float(item[6].text),
+                                                      float(item[10].text)))
 
         if (len(exchangeList) > 0):
             ExchangeModel.save_list_to_db(exchangeList)

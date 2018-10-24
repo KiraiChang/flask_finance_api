@@ -5,9 +5,11 @@ from lxml import etree
 from flask_restful import Resource
 from models.stock import StockModel
 
-class Stocks(Resource):
+
+class StocksResource(Resource):
     def patch(self, date):
-        maxDate = datetime.datetime.strptime(StockModel.get_max_date(), '%Y%m%d')
+        maxDate = datetime.datetime.strptime(
+            StockModel.get_max_date(), '%Y%m%d')
         response = requests.get(
             'http://www.twse.com.tw/exchangeReport'
             '/STOCK_DAY?response=html&date='
@@ -31,10 +33,11 @@ class Stocks(Resource):
             if (maxDate < itemDate):
                 stockList.append(
                     StockModel(itemDate.strftime('%Y%m%d'), float(item[3].text),
-                     float(item[4].text), float(item[5].text),
-                     float(item[6].text), float(item[7].text),
-                     round(int(item[1].text.replace(',', '')) / 1000),
-                     round(int(item[2].text.replace(',', '')) / 1000)))
+                               float(item[4].text), float(item[5].text),
+                               float(item[6].text), float(item[7].text),
+                               round(
+                                   int(item[1].text.replace(',', '')) / 1000),
+                               round(int(item[2].text.replace(',', '')) / 1000)))
         if (len(stockList) > 0):
             StockModel.save_list_to_db(stockList)
         return {'message': 'patch fund success', 'funds': list(item.json() for item in stockList)}, 200

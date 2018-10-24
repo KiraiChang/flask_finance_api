@@ -1,17 +1,19 @@
-from db import db
+from common.db import db
 from sqlalchemy import desc
 
+
 class FundModel(db.Model):
+    __bind_key__ = 'finance'
     __tablename__ = 'funds'
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(80))
     price = db.Column(db.Float)
 
-    def __init__(self, 
-        date, 
-        price, 
-        ):
+    def __init__(self,
+                 date,
+                 price,
+                 ):
         self.date = date
         self.price = price
 
@@ -24,7 +26,7 @@ class FundModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
-    
+
     @classmethod
     def save_list_to_db(cls, list):
         for item in list:

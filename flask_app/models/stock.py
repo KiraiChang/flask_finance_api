@@ -1,7 +1,9 @@
-from db import db
+from common.db import db
 from sqlalchemy import desc
 
+
 class StockModel(db.Model):
+    __bind_key__ = 'finance'
     __tablename__ = 'stocks'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -14,16 +16,16 @@ class StockModel(db.Model):
     volume = db.Column(db.Integer)
     amount = db.Column(db.Integer)
 
-    def __init__(self, 
-        date, 
-        open_price, 
-        max_price,
-        min_price,
-        close_price,
-        decline,
-        volume,
-        amount
-        ):
+    def __init__(self,
+                 date,
+                 open_price,
+                 max_price,
+                 min_price,
+                 close_price,
+                 decline,
+                 volume,
+                 amount
+                 ):
         self.date = date
         self.open_price = open_price
         self.max_price = max_price
@@ -48,7 +50,7 @@ class StockModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
-    
+
     @classmethod
     def save_list_to_db(cls, list):
         for item in list:

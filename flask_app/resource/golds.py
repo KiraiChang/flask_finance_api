@@ -6,9 +6,10 @@ from flask_restful import Resource
 from models.gold import GoldModel
 
 
-class Golds(Resource):
+class GoldsResource(Resource):
     def patch(self, date):
-        maxDate = datetime.datetime.strptime(GoldModel.get_max_date(), '%Y%m%d')
+        maxDate = datetime.datetime.strptime(
+            GoldModel.get_max_date(), '%Y%m%d')
         response = requests.get("https://rate.bot.com.tw/gold/chart/ltm/TWD")
         html = etree.HTML(response.content)
         goldList = []
@@ -23,7 +24,7 @@ class Golds(Resource):
             itemDate = datetime.datetime.strptime(item[0][0].text, '%Y/%m/%d')
             if (maxDate < itemDate):
                 goldList.append(GoldModel(itemDate.strftime('%Y%m%d'),
-                                 item[3].text, item[4].text))
+                                          item[3].text, item[4].text))
         if (len(goldList) > 0):
             GoldModel.save_list_to_db(goldList)
         return {'message': 'patch gold success', 'golds': list(item.json() for item in goldList)}, 200

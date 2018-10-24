@@ -1,7 +1,9 @@
-from db import db
+from common.db import db
 from sqlalchemy import desc
 
+
 class GoldModel(db.Model):
+    __bind_key__ = 'finance'
     __tablename__ = 'golds'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -9,11 +11,11 @@ class GoldModel(db.Model):
     buy = db.Column(db.Float)
     sell = db.Column(db.Float)
 
-    def __init__(self, 
-        date, 
-        buy, 
-        sell,
-        ):
+    def __init__(self,
+                 date,
+                 buy,
+                 sell,
+                 ):
         self.date = date
         self.buy = buy
         self.sell = sell
@@ -28,7 +30,7 @@ class GoldModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
-    
+
     @classmethod
     def save_list_to_db(cls, list):
         for item in list:
