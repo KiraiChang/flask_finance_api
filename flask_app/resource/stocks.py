@@ -11,7 +11,7 @@ class StocksResource(Resource):
         maxDate = datetime.datetime.strptime(
             StockModel.get_max_date(), '%Y%m%d')
         response = requests.get(
-            'http://www.twse.com.tw/exchangeReport'
+            'http://www.twse.com.tw/zh/exchangeReport'
             '/STOCK_DAY?response=html&date='
             + date + "&stockNo=0050")
         html = etree.HTML(response.content)
@@ -31,13 +31,18 @@ class StocksResource(Resource):
             day = int(item[0].text.split('/')[2])
             itemDate = datetime.datetime(year, month, day)
             if (maxDate < itemDate):
+                # print(item[1].text, item[2].text, item[3].text,
+                #       item[4].text, item[5].text, item[6].text, item[7].text)
                 stockList.append(
-                    StockModel(itemDate.strftime('%Y%m%d'), float(item[3].text),
-                               float(item[4].text), float(item[5].text),
-                               float(item[6].text), float(item[7].text),
+                    StockModel(itemDate.strftime('%Y%m%d'), float(item[3].text.replace('X', '')),
+                               float(item[4].text.replace('X', '')), float(
+                                   item[5].text.replace('X', '')),
+                               float(item[6].text.replace('X', '')), float(
+                                   item[7].text.replace('X', '')),
                                round(
                                    int(item[1].text.replace(',', '')) / 1000),
                                round(int(item[2].text.replace(',', '')) / 1000)))
+
         if (len(stockList) > 0):
             StockModel.save_list_to_db(stockList)
         return {'message': 'patch fund success', 'funds': list(item.json() for item in stockList)}, 200

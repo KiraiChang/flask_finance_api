@@ -12,15 +12,10 @@ class ExchangesResource(Resource):
         maxDate = datetime.datetime.strptime(
             ExchangeModel.get_max_date(), '%Y%m%d')
         exchangeParam = {
-            "datestart": maxDate.strftime('%Y/%m/%d'),
-            "syear": maxDate.strftime('%Y'),
-            "smonth": maxDate.strftime('%m'),
-            "sday": maxDate.strftime('%d'),
-            "dateend": endDate.strftime('%Y/%m/%d'),
-            "eyear": endDate.strftime('%Y'),
-            "emonth": endDate.strftime('%m'),
-            "eday": endDate.strftime('%d'),
+            "queryStartDate": maxDate.strftime('%Y/%m/%d'),
+            "queryEndDate": endDate.strftime('%Y/%m/%d'),
         }
+        # print(exchangeParam)
 
         response = requests.post('http://www.taifex.com.tw/cht/3/dailyFXRate',
                                  exchangeParam)
