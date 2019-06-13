@@ -10,7 +10,7 @@ class GoldsResource(Resource):
     def patch(self, date):
         maxDate = datetime.datetime.strptime(
             GoldModel.get_max_date(), '%Y%m%d')
-        response = requests.get("https://rate.bot.com.tw/gold/chart/ltm/TWD")
+        response = requests.get("https://rate.bot.com.tw/gold/chart/year/TWD")
         html = etree.HTML(response.content)
         goldList = []
         for item in html.xpath(
@@ -26,6 +26,7 @@ class GoldsResource(Resource):
                 goldList.append(GoldModel(itemDate.strftime('%Y%m%d'),
                                           item[3].text, item[4].text))
         if (len(goldList) > 0):
+            goldList = sorted(goldList, key=lambda g: g.date)
             GoldModel.save_list_to_db(goldList)
         return {'message': 'patch gold success', 'golds': list(item.json() for item in goldList)}, 200
 

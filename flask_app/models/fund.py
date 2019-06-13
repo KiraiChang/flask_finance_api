@@ -3,22 +3,25 @@ from sqlalchemy import desc
 
 
 class FundModel(db.Model):
-    __bind_key__ = 'finance'
     __tablename__ = 'funds'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
     date = db.Column(db.String(80))
     price = db.Column(db.Float)
 
     def __init__(self,
+                 name,
                  date,
                  price,
                  ):
+        self.name = name
         self.date = date
         self.price = price
 
     def json(self):
         return {
+            'name': self.name,
             'date': self.date,
             'price': self.price,
         }

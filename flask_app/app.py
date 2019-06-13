@@ -12,11 +12,11 @@ from resource.user import UserResource, UsersResource
 from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
-app.config['SQLALCHEMY_BINDS'] = {
-    'finance': 'sqlite:///finance.db',
-    'user': 'sqlite:///user.db'
-}
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['PG_DATABASE_URL']
+# app.config['SQLALCHEMY_BINDS'] = {
+#    'finance': os.environ['PG_DATABASE_URL'],
+#    'userdb': os.environ['PG_DATABASE_URL']
+#}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
@@ -37,6 +37,10 @@ class printMiddleware(object):
             app.logger.debug('{0}={1}'.format(key, value))
 
         return self.app(environ, start_response)
+
+@app.shell_context_processor
+def make_shell_context():
+    return dict(app=app, db=db)
 
 
 if __name__ == '__main__':

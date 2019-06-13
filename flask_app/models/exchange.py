@@ -3,7 +3,6 @@ from sqlalchemy import desc
 
 
 class ExchangeModel(db.Model):
-    __bind_key__ = 'finance'
     __tablename__ = 'exchanges'
 
     id = db.Column(db.Integer, primary_key=True)

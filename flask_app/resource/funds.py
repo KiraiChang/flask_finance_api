@@ -28,8 +28,10 @@ class FundsResource(Resource):
                 date = datetime.datetime.strptime(item[0].text, '%Y/%m/%d')
                 if (maxDate < date):
                     fundList.append(FundModel(date.strftime('%Y%m%d'),
+                                              'ALB04-0961',
                                               item[1].text))
         if (len(fundList) > 0):
+            fundList = sorted(fundList, key=lambda f: f.date)
             FundModel.save_list_to_db(fundList)
         return {'message': 'patch fund success', 'funds': list(item.json() for item in fundList)}, 200
 

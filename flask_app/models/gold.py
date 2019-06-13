@@ -3,7 +3,6 @@ from sqlalchemy import desc
 
 
 class GoldModel(db.Model):
-    __bind_key__ = 'finance'
     __tablename__ = 'golds'
 
     id = db.Column(db.Integer, primary_key=True)

@@ -3,10 +3,10 @@ from sqlalchemy import desc
 
 
 class StockModel(db.Model):
-    __bind_key__ = 'finance'
     __tablename__ = 'stocks'
 
     id = db.Column(db.Integer, primary_key=True)
+    stock_id = db.Column(db.String(80))
     date = db.Column(db.String(80))
     open_price = db.Column(db.Float)
     max_price = db.Column(db.Float)
@@ -17,6 +17,7 @@ class StockModel(db.Model):
     amount = db.Column(db.Integer)
 
     def __init__(self,
+                 stock_id,
                  date,
                  open_price,
                  max_price,
@@ -26,6 +27,7 @@ class StockModel(db.Model):
                  volume,
                  amount
                  ):
+        self.stock_id = stock_id
         self.date = date
         self.open_price = open_price
         self.max_price = max_price
@@ -37,6 +39,7 @@ class StockModel(db.Model):
 
     def json(self):
         return {
+            'stock_id': self.stock_id,
             'date': self.date,
             'open_price': self.open_price,
             'max_price': self.max_price,

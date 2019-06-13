@@ -43,12 +43,12 @@ class ExchangesResource(Resource):
         if (len(exchangeList) > 0):
             ExchangeModel.save_list_to_db(exchangeList)
         return {
-            'message': 'patch fund success',
+            'message': 'patch exchange success',
             'exchange': list(item.json() for item in exchangeList)
         }, 200
 
     def get(self, date):
         return {
-            'message': 'get fund success',
+            'message': 'get exchange success',
             'exchange': list(item.json() for item in ExchangeModel.get_by_date(date))
         }, 200

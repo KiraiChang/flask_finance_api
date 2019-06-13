@@ -34,18 +34,20 @@ class StocksResource(Resource):
                 # print(item[1].text, item[2].text, item[3].text,
                 #       item[4].text, item[5].text, item[6].text, item[7].text)
                 stockList.append(
-                    StockModel(itemDate.strftime('%Y%m%d'), float(item[3].text.replace('X', '')),
-                               float(item[4].text.replace('X', '')), float(
-                                   item[5].text.replace('X', '')),
-                               float(item[6].text.replace('X', '')), float(
-                                   item[7].text.replace('X', '')),
-                               round(
-                                   int(item[1].text.replace(',', '')) / 1000),
-                               round(int(item[2].text.replace(',', '')) / 1000)))
+                    StockModel(itemDate.strftime('%Y%m%d'),
+                                '0050',
+                                float(item[3].text.replace('X', '')),
+                                float(item[4].text.replace('X', '')), 
+                                float(item[5].text.replace('X', '')),
+                                float(item[6].text.replace('X', '')), 
+                                float(item[7].text.replace('X', '')),
+                                round(int(item[1].text.replace(',', '')) / 1000),
+                                round(int(item[2].text.replace(',', '')) / 1000)))
 
         if (len(stockList) > 0):
+            stockList = sorted(stockList, key=lambda s: s.date)
             StockModel.save_list_to_db(stockList)
-        return {'message': 'patch fund success', 'funds': list(item.json() for item in stockList)}, 200
+        return {'message': 'patch stock success', 'stocks': list(item.json() for item in stockList)}, 200
 
     def get(self, date):
-        return {'message': 'get fund success', 'funds': list(item.json() for item in StockModel.get_by_date(date))}, 200
+        return {'message': 'get stock success', 'stocks': list(item.json() for item in StockModel.get_by_date(date))}, 200
